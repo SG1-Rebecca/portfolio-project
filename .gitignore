@@ -1,0 +1,51 @@
+# ===== VS CODE =====
+.vscode/
+
+# ===== JetBrains =====
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# ===== Python =====
+__pycache__/
+
+# ===== Virtual Environments =====
+venv/
+ENV/
+env/
+.venv/
+
+# ===== Django =====
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+/media/
+/staticfiles/
+*/static/
+*/media/
+
+# ===== Django Debug & Secret Keys =====
+.env
+.env.local
+.env.*.local
+*secret*
+*.secret
+secrets.json
+
+
+# ===== Environment Files =====
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+*.env
+
+# ===== OS Generated Files =====
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
