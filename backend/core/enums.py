@@ -43,3 +43,13 @@ class ApplicationStatus(models.TextChoices):
     ACCEPTED = 'ACCEPTED', 'Accepted'
     REJECTED = 'REJECTED', 'Rejected'
     WITHDRAWN = 'WITHDRAWN', 'Withdrawn'
+
+class Position(models.TextChoices):
+    """
+    Position of the player
+    """
+    GOALKEEPER = 'GOALKEEPER', 'Goalkeeper'
+    DEFENDER = 'DEFENDER', 'Defender'
+    MIDFIELDER = 'MIDFIELDER', 'Midfielder'
+    FORWARD = 'FORWARD', 'Forward'
+    UNIVERSAL = 'UNIVERSAL', 'Universal'
