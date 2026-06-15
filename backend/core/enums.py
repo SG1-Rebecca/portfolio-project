@@ -53,3 +53,10 @@ class Position(models.TextChoices):
     MIDFIELDER = 'MIDFIELDER', 'Midfielder'
     FORWARD = 'FORWARD', 'Forward'
     UNIVERSAL = 'UNIVERSAL', 'Universal'
+
+class SectionCategory(models.TextChoices):
+    """
+    Category for recruitment sections
+    """
+    MEN = 'MEN', 'Men'
+    WOMEN = 'WOMEN', 'Women'
