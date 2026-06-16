@@ -15,6 +15,9 @@ venv/
 ENV/
 env/
 .venv/
+.env
+.env.local
+.env.development
 
 # ===== Django =====
 *.log
