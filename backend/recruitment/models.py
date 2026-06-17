@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from django.core.exceptions import ValidationError
 
 from core.enums import Status, SkillLevel, ApplicationStatus, Position, SectionCategory, Gender
@@ -47,6 +48,9 @@ class Application(BaseModel):
         if not self.post_id or not self.player_id:
             return
 
+        if self.post.application_deadline < timezone.now().date():
+            raise ValidationError("Applications are closed for this recruitment post.")
+
         if self.post.category == SectionCategory.MEN and self.player.gender != Gender.MALE:
             raise ValidationError("This position is reserved for men's teams.")
 
@@ -63,5 +67,10 @@ class Application(BaseModel):
         )
 
     class Meta:
-        unique_together = ('player', 'post')
-        ordering = ['-created_at']
+        ordering = ('-created_at',)
+        constraints = [
+            models.UniqueConstraint(
+                fields=['player', 'post'],
+                name='unique_player_post_application'
+            )
+        ]
