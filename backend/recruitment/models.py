@@ -57,6 +57,9 @@ class Application(BaseModel):
         if self.post.category == SectionCategory.WOMEN and self.player.gender != Gender.FEMALE:
             raise ValidationError("This position is reserved for women's teams.")
 
+        if self.post.position_needed != self.player.position:
+            raise ValidationError("Your position does not match the requirements of this listing.")
+
     def __str__(self):
         player_name = self.player.user.get_full_name().strip() or 'Unknown'
         club_name = self.post.club.club_name
