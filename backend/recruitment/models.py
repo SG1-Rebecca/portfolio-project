@@ -37,7 +37,6 @@ class Application(BaseModel):
     Application submitted by a player to a recruitment post
     """
     player = models.ForeignKey(PlayerProfile, on_delete=models.CASCADE, related_name='player_applications')
-    post = models.ForeignKey(RecruitmentPost, on_delete=models.CASCADE, related_name='applications')
     player_message = models.TextField(blank=True)
     contact_revealed = models.BooleanField(default=False)
     status = models.CharField(max_length=50, choices=ApplicationStatus, default=ApplicationStatus.PENDING)
