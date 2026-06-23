@@ -14,13 +14,13 @@ class RecruitmentPost(BaseModel):
     Recruitment offer published by the club
     """
     club = models.ForeignKey(ClubProfile, on_delete=models.CASCADE, related_name='recruitment_post')
+    title = models.CharField(max_length=150)
+    status = models.CharField(max_length=50, choices=Status)
     category = models.CharField(max_length=50, choices=SectionCategory)
     position_needed = models.CharField(max_length=50, choices=Position)
-    status = models.CharField(max_length=50, choices=Status)
-    title = models.CharField(blank=False, null=False, max_length=150)
     level_required = models.CharField(max_length=50, choices=SkillLevel)
     region = models.CharField(blank=False, null=False, max_length=50)
-    description = models.TextField(blank=True, null=True)
+    description = models.TextField()
     application_deadline = models.DateField()
 
     def __str__(self):
@@ -36,6 +36,7 @@ class Application(BaseModel):
     """
     Application submitted by a player to a recruitment post
     """
+    post = models.ForeignKey(RecruitmentPost, on_delete=models.CASCADE, related_name='applications')
     player = models.ForeignKey(PlayerProfile, on_delete=models.CASCADE, related_name='player_applications')
     player_message = models.TextField(blank=True)
     contact_revealed = models.BooleanField(default=False)
@@ -60,13 +61,9 @@ class Application(BaseModel):
             raise ValidationError("Your position does not match the requirements of this listing.")
 
     def __str__(self):
-        player_name = self.player.user.get_full_name().strip() or 'Unknown'
+        player_name = f"{self.player.first_name} {self.player.last_name}".strip() or 'Unknown Player'
         club_name = self.post.club.club_name
-        return (
-            f'[{self.status}] {player_name} -> {self.post.title} '
-            f'{club_name} '
-            f'{self.post.position_needed} • {self.post.level_required}'
-        )
+        return f'[{self.status}] {player_name} -> {self.post.title} ({club_name})'
 
     class Meta:
         ordering = ('-created_at',)
