@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'recruitment.apps.RecruitmentConfig',
     'rest_framework',
+    'drf_spectacular',
 ]
 
 REST_FRAMEWORK = {
