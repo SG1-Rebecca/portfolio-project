@@ -77,7 +77,6 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'Recruitment App',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
-    # OTHER SETTINGS
 }
 
 MIDDLEWARE = [
