@@ -90,6 +90,20 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',  # dev
+    }
+}
+
+EMAIL_BACKEND      = 'django.core.mail.backends.console.EmailBackend'  # dev
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@tonapp.com')
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+]
+
 ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [
