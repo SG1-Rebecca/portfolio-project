@@ -44,15 +44,28 @@ class ApplicationStatus(models.TextChoices):
     REJECTED = 'REJECTED', 'Rejected'
     WITHDRAWN = 'WITHDRAWN', 'Withdrawn'
 
-class Position(models.TextChoices):
+
+class PlayerPosition(models.TextChoices):
     """
-    Position of the player
+    Real-field positions for a Player's profile.
     """
     GOALKEEPER = 'GOALKEEPER', 'Goalkeeper'
     DEFENDER = 'DEFENDER', 'Defender'
     MIDFIELDER = 'MIDFIELDER', 'Midfielder'
     FORWARD = 'FORWARD', 'Forward'
-    UNIVERSAL = 'UNIVERSAL', 'Universal'
+    UNIVERSAL = 'UNIVERSAL', 'Universal (Versatile)'
+
+
+class RecruitmentPosition(models.TextChoices):
+    """
+    Positions a Club can target in a recruitment post.
+    """
+    GOALKEEPER = 'GOALKEEPER', 'Goalkeeper'
+    DEFENDER = 'DEFENDER', 'Defender'
+    MIDFIELDER = 'MIDFIELDER', 'Midfielder'
+    FORWARD = 'FORWARD', 'Forward'
+    ANY = 'ANY', 'Any Position Open'
+
 
 class SectionCategory(models.TextChoices):
     """
