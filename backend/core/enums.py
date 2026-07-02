@@ -27,7 +27,7 @@ class Role(models.TextChoices):
     CLUB = 'CLUB', 'Club'
 
 
-class Status(models.TextChoices):
+class RecruitmentStatus(models.TextChoices):
     """
     Recruitment post status
     """
