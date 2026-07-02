@@ -77,6 +77,16 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'Recruitment App',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
+    'ENUM_NAME_OVERRIDES': {
+        # Resolve the enum name collision between RecruitmentPost.status
+        # and Application.status.
+        'RecruitmentStatusEnum': 'core.enums.RecruitmentStatus',
+        'ApplicationStatusEnum': 'core.enums.ApplicationStatus',
+
+        # Use a single enum name for SkillLevel, shared by
+        # PlayerProfile.level and RecruitmentPost.level_required.
+        'SkillLevelEnum': 'core.enums.SkillLevel',
+    }
 }
 
 MIDDLEWARE = [
