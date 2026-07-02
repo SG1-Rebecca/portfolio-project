@@ -1,19 +1,23 @@
-# accounts/utils.py
-import random
+import secrets
 from django.core.cache import cache
 from django.core.mail import send_mail
 from django.conf import settings
 
 
 def generate_otp(user) -> str:
-    otp = str(random.randint(100000, 999999))
+    otp = f"{secrets.randbelow(1_000_000):06d}"
     cache.set(f"otp:{user.pk}", otp, timeout=300)
     return otp
 
 
 def verify_otp(user, otp: str) -> bool:
+    # Retrieve the stored OTP from the cache.
     cached = cache.get(f"otp:{user.pk}")
-    if cached and cached == otp:
+    if cached is None:
+        return False
+
+    # Validate the OTP and remove it after successful verification.
+    if secrets.compare_digest(cached, otp):
         cache.delete(f"otp:{user.pk}")
         return True
     return False
