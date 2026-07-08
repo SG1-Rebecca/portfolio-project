@@ -16,12 +16,9 @@ class RegisterSerializer(serializers.ModelSerializer):
         if not value:
             raise serializers.ValidationError('Birth date is required')
 
-        today = timezone.now().date()
-        age = (today.year - value.year
-               - ((today.month, today.day) < (value.month, value.day)))
-
-        if age < 18:
-            raise serializers.ValidationError('Minimum age requirement: 18 years old.')
+        temporary_user = User(birth_date=value)
+        if not temporary_user.is_adult():
+            raise serializers.ValidationError(f'Minimum age requirement: 18 years old.')
         return value
 
     def create(self, validated_data):
@@ -75,11 +72,22 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
 
 
 class ClubProfileSerializer(serializers.ModelSerializer):
+    user_id = serializers.ReadOnlyField(source='user.id')
     class Meta:
         model  = ClubProfile
         fields = [
-            'id', 'club_name', 'president_name', 'foundation_date',
+            'user_id', 'club_name', 'president_name', 'foundation_date',
             'city', 'country', 'league', 'district',
             'social_link', 'is_verified',
         ]
         read_only_fields = ['id', 'is_verified']
+
+
+class ClubPublicProfileSerializer(serializers.ModelSerializer):
+    user_id = serializers.ReadOnlyField(source='user.id')
+    class Meta:
+        model = ClubProfile
+        fields = [
+            'user_id', 'club_name', 'president_name', 'foundation_date',
+            'city', 'country', 'league', 'district', 'social_link', 'is_verified'
+        ]

@@ -1,8 +1,10 @@
-# recruitment/serializers.py
+from django.core.exceptions import ValidationError as DjangoValidationError
 from drf_spectacular.utils import extend_schema_field
 from drf_spectacular.types import OpenApiTypes
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError as DRFValidationError
 from .models import RecruitmentPost, Application
+from core.enums import ApplicationStatus
 
 
 class RecruitmentPostSerializer(serializers.ModelSerializer):
@@ -38,8 +40,16 @@ class ApplicationSerializer(serializers.ModelSerializer):
         return obj.player.user.email
 
 
+    def create(self, validated_data):
+        instance = Application(**validated_data)
+        try:
+            instance.full_clean()
+        except DjangoValidationError as e:
+            raise DRFValidationError(e.message_dict)
+        instance.save()
+        return instance
+
 class ApplicationStatusSerializer(serializers.ModelSerializer):
-    """Used by clubs to update application status only."""
     class Meta:
         model  = Application
         fields = ['status']

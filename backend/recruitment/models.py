@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 
-from core.enums import Status, SkillLevel, ApplicationStatus, Position, SectionCategory, Gender
+from core.enums import PlayerPosition, RecruitmentStatus, SkillLevel, ApplicationStatus, RecruitmentPosition, SectionCategory, Gender
 
 from core.models import BaseModel
 from accounts.models import PlayerProfile, ClubProfile
@@ -15,9 +15,9 @@ class RecruitmentPost(BaseModel):
     """
     club = models.ForeignKey(ClubProfile, on_delete=models.CASCADE, related_name='recruitment_post')
     title = models.CharField(max_length=150)
-    status = models.CharField(max_length=50, choices=Status)
+    status = models.CharField(max_length=50, choices=RecruitmentStatus)
     category = models.CharField(max_length=50, choices=SectionCategory)
-    position_needed = models.CharField(max_length=50, choices=Position)
+    position_needed = models.CharField(max_length=50, choices=RecruitmentPosition)
     level_required = models.CharField(max_length=50, choices=SkillLevel)
     region = models.CharField(blank=False, null=False, max_length=50)
     description = models.TextField()
@@ -40,13 +40,16 @@ class Application(BaseModel):
     player = models.ForeignKey(PlayerProfile, on_delete=models.CASCADE, related_name='player_applications')
     player_message = models.TextField(blank=True)
     contact_revealed = models.BooleanField(default=False)
-    status = models.CharField(max_length=50, choices=ApplicationStatus, default=ApplicationStatus.PENDING)
+    status = models.CharField(max_length=50, choices=ApplicationStatus, default=ApplicationStatus.PENDING.value)
 
     def clean(self):
         super().clean()
 
         if not self.post_id or not self.player_id:
             return
+
+        if self.post.club.user_id == self.player.user_id:
+            raise ValidationError("You cannot apply to a post published by your own club.")
 
         if self.post.application_deadline < timezone.now().date():
             raise ValidationError("Applications are closed for this recruitment post.")
@@ -57,7 +60,12 @@ class Application(BaseModel):
         if self.post.category == SectionCategory.WOMEN and self.player.gender != Gender.FEMALE:
             raise ValidationError("This position is reserved for women's teams.")
 
-        if self.post.position_needed != self.player.position:
+
+        if (
+                self.post.position_needed != RecruitmentPosition.ANY
+                and self.player.position != PlayerPosition.UNIVERSAL
+                and self.post.position_needed != self.player.position
+        ):
             raise ValidationError("Your position does not match the requirements of this listing.")
 
     def __str__(self):

@@ -7,14 +7,14 @@ from django.db import models
 from datetime import date
 
 from core.models import BaseModel
-from core.enums import Gender, SkillLevel, Role, Position
+from core.enums import Gender, SkillLevel, Role, PlayerPosition
 from .managers import UserManager
 
 
 # Create your models here.
 class User(AbstractBaseUser, PermissionsMixin):
     """
-
+    
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True, db_index=True)
@@ -40,7 +40,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.email
 
     def clean(self):
-        """Validation au niveau model (admin, forms, appels directs)"""
         super().clean()
         if self.birth_date and not self.is_adult():
             raise ValidationError({
@@ -71,7 +70,7 @@ class PlayerProfile(BaseModel):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     gender = models.CharField(max_length=50, choices=Gender)
-    position = models.CharField(max_length=50, choices=Position)
+    position = models.CharField(max_length=50, choices=PlayerPosition)
     level = models.CharField(max_length=50, choices=SkillLevel)
     biography = models.TextField(null=True, blank=True)
     is_verified = models.BooleanField(default=False)
